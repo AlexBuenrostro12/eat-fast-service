@@ -1,10 +1,12 @@
 import { Address } from 'src/address/entity/address.entity';
+import { Order } from 'src/order/entity/oder.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,13 +17,12 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // TODO: run migration
   @OneToOne(() => Address)
   @JoinColumn()
   address: Address;
 
-  @Column()
-  orderId: number;
+  @OneToMany(() => Order, (order) => order.user)
+  order: Order[];
 
   @Column()
   firstname: string;

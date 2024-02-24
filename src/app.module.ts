@@ -8,6 +8,11 @@ import { UserModule } from './user/user.module';
 import { AddressModule } from './address/address.module';
 import { OrderController } from './order/order.controller';
 import { OrderModule } from './order/order.module';
+import { OrderDetailModule } from './order-detail/order-detail.module';
+import { ProductModule } from './product/product.module';
+import { IngredientModule } from './ingredient/ingredient.module';
+import { ComplementModule } from './complement/complement.module';
+import { BusinessModule } from './business/business.module';
 
 @Module({
   imports: [
@@ -24,6 +29,11 @@ import { OrderModule } from './order/order.module';
     UserModule,
     AddressModule,
     OrderModule,
+    OrderDetailModule,
+    ProductModule,
+    IngredientModule,
+    ComplementModule,
+    BusinessModule,
   ],
   controllers: [AppController, UserController, OrderController],
   providers: [AppService, UserService],

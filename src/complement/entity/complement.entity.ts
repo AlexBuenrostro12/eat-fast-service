@@ -1,29 +1,30 @@
-import { COLOGNE } from 'src/shared/enum/cologne.enum';
+import { Product } from 'src/product/entity/product.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Address {
+export class Complement {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  street: string;
+  @ManyToOne(() => Product, (product) => product.complement)
+  product: Product;
 
   @Column()
-  number: number;
+  name: string;
 
-  @Column({
-    type: 'enum',
-    enum: COLOGNE,
-  })
-  cologne: COLOGNE;
+  @Column()
+  description: string;
+
+  @Column()
+  required: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

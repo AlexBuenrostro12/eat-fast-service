@@ -16,6 +16,14 @@ import { BusinessModule } from './business/business.module';
 
 @Module({
   imports: [
+    UserModule,
+    AddressModule,
+    OrderModule,
+    OrderDetailModule,
+    ProductModule,
+    IngredientModule,
+    ComplementModule,
+    BusinessModule,
     TypeOrmModule.forRoot({
       type: 'postgres', // type of our database
       host: 'localhost', // database host
@@ -26,14 +34,6 @@ import { BusinessModule } from './business/business.module';
       autoLoadEntities: true, // models will be loaded automatically
       synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
     }),
-    UserModule,
-    AddressModule,
-    OrderModule,
-    OrderDetailModule,
-    ProductModule,
-    IngredientModule,
-    ComplementModule,
-    BusinessModule,
   ],
   controllers: [AppController, UserController, OrderController],
   providers: [AppService, UserService],

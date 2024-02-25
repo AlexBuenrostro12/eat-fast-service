@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 import { CreateAddressDto } from 'src/address/dto/create-address.dto';
 
 export class CreateUserDto {
@@ -10,9 +10,10 @@ export class CreateUserDto {
   readonly lastname: string;
 
   @IsString()
+  @IsEmail()
   readonly email: string;
 
-  @IsString()
+  @IsNumber()
   readonly phone: number;
 
   @IsString()

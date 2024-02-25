@@ -4,12 +4,15 @@ import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Address } from 'src/address/entity/address.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Address)
+    private readonly addressRepository: Repository<Address>,
   ) {}
 
   findAll() {
@@ -26,9 +29,17 @@ export class UserService {
     return user;
   }
 
-  async create(payload: CreateUserDto) {
+  async create({ address, ...payload }: CreateUserDto) {
+    const newAddress = new Address();
+    newAddress.street = address.street;
+    newAddress.number = address.number;
+    newAddress.cologne = address.cologne;
+    await this.addressRepository.save(newAddress);
+
     const user = this.userRepository.create({ ...payload });
-    return this.userRepository.save(user);
+    user.address = newAddress;
+
+    return await this.userRepository.save(user);
   }
 
   async update(id: number, payload: UpdateUserDto) {

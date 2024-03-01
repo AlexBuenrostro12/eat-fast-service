@@ -15,7 +15,7 @@ export class BusinessService {
   ) {}
 
   findAll() {
-    return this.businessRepository.find();
+    return this.businessRepository.find({ relations: ['address'] });
   }
 
   async findOneById(id: number) {

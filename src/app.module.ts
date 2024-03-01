@@ -14,17 +14,15 @@ import { IngredientModule } from './ingredient/ingredient.module';
 import { ComplementModule } from './complement/complement.module';
 import { BusinessModule } from './business/business.module';
 import { AddressService } from './address/address.service';
+import { AddressController } from './address/address.controller';
+import { BusinessController } from './business/business.controller';
+import { BusinessService } from './business/business.service';
+import { User } from './user/entity/user.entity';
+import { Address } from './address/entity/address.entity';
+import { Business } from './business/entity/business.entity';
 
 @Module({
   imports: [
-    UserModule,
-    AddressModule,
-    OrderModule,
-    OrderDetailModule,
-    ProductModule,
-    IngredientModule,
-    ComplementModule,
-    BusinessModule,
     TypeOrmModule.forRoot({
       type: 'postgres', // type of our database
       host: 'localhost', // database host
@@ -35,8 +33,23 @@ import { AddressService } from './address/address.service';
       autoLoadEntities: true, // models will be loaded automatically
       synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
     }),
+    TypeOrmModule.forFeature([User, Address, Business]),
+    UserModule,
+    AddressModule,
+    OrderModule,
+    OrderDetailModule,
+    ProductModule,
+    IngredientModule,
+    ComplementModule,
+    BusinessModule,
   ],
-  controllers: [AppController, UserController, OrderController],
-  providers: [AppService, UserService, AddressService],
+  controllers: [
+    AppController,
+    UserController,
+    AddressController,
+    BusinessController,
+    OrderController,
+  ],
+  providers: [AppService, UserService, AddressService, BusinessService],
 })
 export class AppModule {}

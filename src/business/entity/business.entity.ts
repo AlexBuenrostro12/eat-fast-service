@@ -1,11 +1,13 @@
+import { Address } from 'src/address/entity/address.entity';
 import { Product } from 'src/product/entity/product.entity';
-import { COLOGNE } from 'src/shared/enum/cologne.enum';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,23 +23,21 @@ export class Business {
   @Column()
   name: string;
 
-  @Column({
-    type: 'enum',
-    enum: COLOGNE,
-  })
-  cologne: COLOGNE;
-
-  @Column()
+  @Column({ type: 'bigint' })
   phone: number;
 
-  @Column()
-  address: string;
+  @OneToOne(() => Address)
+  @JoinColumn()
+  address: Address;
 
   @Column()
-  open: number;
+  start: string;
 
   @Column()
-  close: number;
+  end: string;
+
+  @Column()
+  open: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

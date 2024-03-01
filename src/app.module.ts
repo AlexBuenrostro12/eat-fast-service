@@ -20,6 +20,13 @@ import { BusinessService } from './business/business.service';
 import { User } from './user/entity/user.entity';
 import { Address } from './address/entity/address.entity';
 import { Business } from './business/entity/business.entity';
+import { Product } from './product/entity/product.entity';
+import { Ingredient } from './ingredient/entity/ingredient.entity';
+import { Complement } from './complement/entity/complement.entity';
+import { ProductService } from './product/product.service';
+import { IngredientService } from './ingredient/ingredient.service';
+import { ComplementService } from './complement/complement.service';
+import { ProductController } from './product/product.controller';
 
 @Module({
   imports: [
@@ -33,7 +40,14 @@ import { Business } from './business/entity/business.entity';
       autoLoadEntities: true, // models will be loaded automatically
       synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
     }),
-    TypeOrmModule.forFeature([User, Address, Business]),
+    TypeOrmModule.forFeature([
+      User,
+      Address,
+      Business,
+      Product,
+      Ingredient,
+      Complement,
+    ]),
     UserModule,
     AddressModule,
     OrderModule,
@@ -49,7 +63,16 @@ import { Business } from './business/entity/business.entity';
     AddressController,
     BusinessController,
     OrderController,
+    ProductController,
   ],
-  providers: [AppService, UserService, AddressService, BusinessService],
+  providers: [
+    AppService,
+    UserService,
+    AddressService,
+    BusinessService,
+    ProductService,
+    IngredientService,
+    ComplementService,
+  ],
 })
 export class AppModule {}

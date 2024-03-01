@@ -15,13 +15,27 @@ export class BusinessService {
   ) {}
 
   findAll() {
-    return this.businessRepository.find({ relations: ['address'] });
+    return this.businessRepository.find({
+      relations: {
+        address: true,
+        product: {
+          ingredient: true,
+          complement: true,
+        },
+      },
+    });
   }
 
   async findOneById(id: number) {
     const business = await this.businessRepository.findOne({
       where: { id },
-      relations: ['address'],
+      relations: {
+        address: true,
+        product: {
+          ingredient: true,
+          complement: true,
+        },
+      },
     });
 
     if (!business) {

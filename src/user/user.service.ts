@@ -4,15 +4,14 @@ import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Address } from 'src/address/entity/address.entity';
+import { AddressService } from 'src/address/address.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Address)
-    private readonly addressRepository: Repository<Address>,
+    private readonly addressService: AddressService,
   ) {}
 
   findAll() {
@@ -20,7 +19,10 @@ export class UserService {
   }
 
   async findOneById(id: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['address'],
+    });
 
     if (!user) {
       throw new NotFoundException(`User with #${id} not found`);
@@ -30,11 +32,7 @@ export class UserService {
   }
 
   async create({ address, ...payload }: CreateUserDto) {
-    const newAddress = new Address();
-    newAddress.street = address.street;
-    newAddress.number = address.number;
-    newAddress.cologne = address.cologne;
-    await this.addressRepository.save(newAddress);
+    const newAddress = await this.addressService.create(address);
 
     const user = this.userRepository.create({ ...payload });
     user.address = newAddress;

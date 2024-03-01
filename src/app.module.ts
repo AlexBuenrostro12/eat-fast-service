@@ -13,6 +13,7 @@ import { ProductModule } from './product/product.module';
 import { IngredientModule } from './ingredient/ingredient.module';
 import { ComplementModule } from './complement/complement.module';
 import { BusinessModule } from './business/business.module';
+import { AddressService } from './address/address.service';
 
 @Module({
   imports: [
@@ -36,6 +37,6 @@ import { BusinessModule } from './business/business.module';
     }),
   ],
   controllers: [AppController, UserController, OrderController],
-  providers: [AppService, UserService],
+  providers: [AppService, UserService, AddressService],
 })
 export class AppModule {}

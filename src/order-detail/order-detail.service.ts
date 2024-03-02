@@ -9,15 +9,15 @@ import { UpdateOrderDetailDto } from './dto/update-order-detail.dto';
 export class OrderDetailService {
   constructor(
     @InjectRepository(OrderDetail)
-    private readonly orderDetailService: Repository<OrderDetail>,
+    private readonly orderDetailRepository: Repository<OrderDetail>,
   ) {}
 
   findAll() {
-    return this.orderDetailService.find();
+    return this.orderDetailRepository.find();
   }
 
   async findOneById(id: number) {
-    const orderDetail = await this.orderDetailService.findOne({
+    const orderDetail = await this.orderDetailRepository.findOne({
       where: { id },
       relations: {
         order: true,
@@ -33,13 +33,13 @@ export class OrderDetailService {
   }
 
   async create(payload: CreateOrderDetailDto) {
-    const orderDetail = this.orderDetailService.create({ ...payload });
+    const orderDetail = this.orderDetailRepository.create(payload);
 
-    return await this.orderDetailService.save(orderDetail);
+    return await this.orderDetailRepository.save(orderDetail);
   }
 
   async update(id: number, payload: UpdateOrderDetailDto) {
-    const orderDetail = await this.orderDetailService.preload({
+    const orderDetail = await this.orderDetailRepository.preload({
       id,
       ...payload,
     });
@@ -48,10 +48,10 @@ export class OrderDetailService {
       throw new NotFoundException(`Order detail with #${id} not found`);
     }
 
-    return this.orderDetailService.save(orderDetail);
+    return this.orderDetailRepository.save(orderDetail);
   }
 
   async delete(id: number) {
-    return await this.orderDetailService.softDelete(id);
+    return await this.orderDetailRepository.softDelete(id);
   }
 }

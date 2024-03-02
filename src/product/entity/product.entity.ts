@@ -21,8 +21,8 @@ export class Product {
   @ManyToOne(() => Business, (business) => business.product)
   business: Business;
 
-  @ManyToOne(() => OrderDetail, (orderDetail) => orderDetail.product)
-  orderDetail: OrderDetail;
+  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.product)
+  orderDetail: OrderDetail[];
 
   @OneToMany(() => Ingredient, (ingredient) => ingredient.product)
   ingredient: Ingredient[];

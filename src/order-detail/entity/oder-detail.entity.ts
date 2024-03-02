@@ -4,7 +4,6 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,8 +18,14 @@ export class OrderDetail {
   @ManyToOne(() => Order, (order) => order.orderDetail)
   order: Order;
 
-  @OneToMany(() => Product, (product) => product.orderDetail)
-  product: Product[];
+  @ManyToOne(() => Product, (product) => product.orderDetail)
+  product: Product;
+
+  @Column('int', { array: true })
+  ingredientIds: Array<number>;
+
+  @Column('int', { array: true })
+  complementIds: Array<number>;
 
   @Column()
   quantity: number;

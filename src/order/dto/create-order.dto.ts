@@ -1,10 +1,8 @@
-import { Type } from 'class-transformer';
 import { IsArray, IsNumber } from 'class-validator';
-import { Product } from 'src/product/entity/product.entity';
 
-export class CreateOrderDetailDto {
-  @Type(() => Product)
-  readonly product: Product;
+export class OrderDto {
+  @IsNumber()
+  readonly productId: number;
 
   @IsArray({ each: true })
   readonly ingredientIds: Array<number>;
@@ -14,4 +12,9 @@ export class CreateOrderDetailDto {
 
   @IsNumber()
   readonly quantity: number;
+}
+
+export class CreateOrderDto {
+  @IsArray({ each: true })
+  readonly orders: Array<OrderDto>;
 }

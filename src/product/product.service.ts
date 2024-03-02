@@ -27,16 +27,16 @@ export class ProductService {
   }
 
   async findOneById(id: number) {
-    const ingredient = await this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: { id },
       relations: ['ingredient', 'complement'],
     });
 
-    if (!ingredient) {
-      throw new NotFoundException(`Ingredient with #${id} not found`);
+    if (!product) {
+      throw new NotFoundException(`Product with #${id} not found`);
     }
 
-    return ingredient;
+    return product;
   }
 
   async createByBusinessId({

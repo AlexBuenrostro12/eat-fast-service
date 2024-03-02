@@ -27,6 +27,11 @@ import { ProductService } from './product/product.service';
 import { IngredientService } from './ingredient/ingredient.service';
 import { ComplementService } from './complement/complement.service';
 import { ProductController } from './product/product.controller';
+import { IngredientController } from './ingredient/ingredient.controller';
+import { ComplementController } from './complement/complement.controller';
+import { OrderDetailController } from './order-detail/order-detail.controller';
+import { OrderDetailService } from './order-detail/order-detail.service';
+import { OrderDetail } from './order-detail/entity/oder-detail.entity';
 
 @Module({
   imports: [
@@ -47,6 +52,7 @@ import { ProductController } from './product/product.controller';
       Product,
       Ingredient,
       Complement,
+      OrderDetail,
     ]),
     UserModule,
     AddressModule,
@@ -64,6 +70,9 @@ import { ProductController } from './product/product.controller';
     BusinessController,
     OrderController,
     ProductController,
+    IngredientController,
+    ComplementController,
+    OrderDetailController,
   ],
   providers: [
     AppService,
@@ -73,6 +82,7 @@ import { ProductController } from './product/product.controller';
     ProductService,
     IngredientService,
     ComplementService,
+    OrderDetailService,
   ],
 })
 export class AppModule {}

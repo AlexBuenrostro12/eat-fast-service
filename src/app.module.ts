@@ -32,6 +32,8 @@ import { ComplementController } from './complement/complement.controller';
 import { OrderDetailController } from './order-detail/order-detail.controller';
 import { OrderDetailService } from './order-detail/order-detail.service';
 import { OrderDetail } from './order-detail/entity/oder-detail.entity';
+import { Order } from './order/entity/oder.entity';
+import { OrderService } from './order/order.service';
 
 @Module({
   imports: [
@@ -53,6 +55,7 @@ import { OrderDetail } from './order-detail/entity/oder-detail.entity';
       Ingredient,
       Complement,
       OrderDetail,
+      Order,
     ]),
     UserModule,
     AddressModule,
@@ -83,6 +86,7 @@ import { OrderDetail } from './order-detail/entity/oder-detail.entity';
     IngredientService,
     ComplementService,
     OrderDetailService,
+    OrderService,
   ],
 })
 export class AppModule {}

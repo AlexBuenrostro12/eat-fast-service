@@ -1,13 +1,14 @@
-import { IsArray, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, ValidateNested } from 'class-validator';
 
 export class OrderDto {
   @IsNumber()
   readonly productId: number;
 
-  @IsArray({ each: true })
+  @IsArray()
   readonly ingredientIds: Array<number>;
 
-  @IsArray({ each: true })
+  @IsArray()
   readonly complementIds: Array<number>;
 
   @IsNumber()
@@ -15,6 +16,11 @@ export class OrderDto {
 }
 
 export class CreateOrderDto {
-  @IsArray({ each: true })
+  @IsNumber()
+  readonly userId: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OrderDto)
   readonly orders: Array<OrderDto>;
 }

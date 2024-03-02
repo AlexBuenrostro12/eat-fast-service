@@ -6,10 +6,10 @@ export class CreateOrderDetailDto {
   @Type(() => Product)
   readonly product: Product;
 
-  @IsArray({ each: true })
+  @IsArray()
   readonly ingredientIds: Array<number>;
 
-  @IsArray({ each: true })
+  @IsArray()
   readonly complementIds: Array<number>;
 
   @IsNumber()

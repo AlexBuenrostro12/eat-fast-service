@@ -38,6 +38,10 @@ export class OrderDetailService {
     return await this.orderDetailRepository.save(orderDetail);
   }
 
+  async createMany(payload: Array<CreateOrderDetailDto>) {
+    return this.orderDetailRepository.create(payload);
+  }
+
   async update(id: number, payload: UpdateOrderDetailDto) {
     const orderDetail = await this.orderDetailRepository.preload({
       id,

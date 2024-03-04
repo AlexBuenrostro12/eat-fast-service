@@ -53,7 +53,30 @@ export class OrderService {
       throw new NotFoundException(`Order with #${id} not found`);
     }
 
-    return order;
+    const filteredOrderDetail = order.orderDetail.map((od) => {
+      const filteredIngredient = od.product.ingredient.filter((ingredient) => {
+        if (od.ingredientIds.find((id) => id === ingredient.id))
+          return ingredient;
+      });
+      const filteredComplement = od.product.complement.filter((complement) => {
+        if (od.complementIds.find((id) => id === complement.id))
+          return complement;
+      });
+
+      return {
+        ...od,
+        product: {
+          ...od.product,
+          ingredient: filteredIngredient,
+          complement: filteredComplement,
+        },
+      };
+    });
+
+    return {
+      ...order,
+      orderDetail: filteredOrderDetail,
+    };
   }
 
   async create({ userId, orders }: CreateOrderDto) {

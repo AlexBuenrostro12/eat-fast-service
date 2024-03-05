@@ -21,11 +21,9 @@ export class OrderDetail {
   @ManyToOne(() => Product, (product) => product.orderDetail)
   product: Product;
 
-  @Column('int', { array: true })
-  ingredientIds: Array<number>;
-
-  @Column('int', { array: true })
-  complementIds: Array<number>;
+  // TODO: update here
+  // @Column('int', { array: true })
+  // ingredientIds: Array<number>;
 
   @Column()
   quantity: number;

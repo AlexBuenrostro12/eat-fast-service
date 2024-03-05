@@ -9,9 +9,6 @@ export class CreateOrderDetailDto {
   @IsArray()
   readonly ingredientIds: Array<number>;
 
-  @IsArray()
-  readonly complementIds: Array<number>;
-
   @IsNumber()
   readonly quantity: number;
 }

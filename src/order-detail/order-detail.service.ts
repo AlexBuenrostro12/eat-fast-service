@@ -21,7 +21,7 @@ export class OrderDetailService {
       where: { id },
       relations: {
         order: true,
-        product: { ingredient: true, complement: true },
+        product: { ingredient: true },
       },
     });
 

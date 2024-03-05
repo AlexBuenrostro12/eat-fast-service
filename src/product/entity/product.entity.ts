@@ -1,5 +1,4 @@
 import { Business } from 'src/business/entity/business.entity';
-import { Complement } from 'src/complement/entity/complement.entity';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
 import { OrderDetail } from 'src/order-detail/entity/oder-detail.entity';
 import {
@@ -26,9 +25,6 @@ export class Product {
 
   @OneToMany(() => Ingredient, (ingredient) => ingredient.product)
   ingredient: Ingredient[];
-
-  @OneToMany(() => Complement, (complement) => complement.product)
-  complement: Complement[];
 
   @Column()
   name: string;

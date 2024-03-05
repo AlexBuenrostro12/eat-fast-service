@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { INGREDIENT_TYPE } from '../enum/ingredient-type.enum';
 
 @Entity()
 export class Ingredient {
@@ -25,6 +26,9 @@ export class Ingredient {
 
   @Column()
   required: boolean;
+
+  @Column({ type: 'enum', enum: INGREDIENT_TYPE })
+  type: INGREDIENT_TYPE;
 
   @CreateDateColumn()
   createdAt: Date;

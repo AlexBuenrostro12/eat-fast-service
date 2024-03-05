@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { Complement } from 'src/complement/entity/complement.entity';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
 
 export class UpdateProductDto {
@@ -19,8 +18,4 @@ export class UpdateProductDto {
   @Type(() => Array<Ingredient>)
   @IsOptional()
   readonly ingredient?: Ingredient[];
-
-  @IsOptional()
-  @Type(() => Array<Complement>)
-  readonly complement?: Complement[];
 }

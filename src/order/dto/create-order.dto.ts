@@ -5,11 +5,8 @@ export class OrderDto {
   @IsNumber()
   readonly productId: number;
 
-  @IsArray()
+  @Type(() => Array<number>)
   readonly ingredientIds: Array<number>;
-
-  @IsArray()
-  readonly complementIds: Array<number>;
 
   @IsNumber()
   readonly quantity: number;

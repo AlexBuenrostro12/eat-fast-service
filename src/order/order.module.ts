@@ -8,11 +8,9 @@ import { OrderDetailService } from 'src/order-detail/order-detail.service';
 import { Product } from 'src/product/entity/product.entity';
 import { ProductService } from 'src/product/product.service';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
-import { Complement } from 'src/complement/entity/complement.entity';
 import { Business } from 'src/business/entity/business.entity';
 import { Address } from 'src/address/entity/address.entity';
 import { IngredientService } from 'src/ingredient/ingredient.service';
-import { ComplementService } from 'src/complement/complement.service';
 import { BusinessService } from 'src/business/business.service';
 import { AddressService } from 'src/address/address.service';
 
@@ -23,7 +21,6 @@ import { AddressService } from 'src/address/address.service';
       OrderDetail,
       Product,
       Ingredient,
-      Complement,
       Business,
       Address,
     ]),
@@ -34,7 +31,6 @@ import { AddressService } from 'src/address/address.service';
     OrderDetailService,
     ProductService,
     IngredientService,
-    ComplementService,
     BusinessService,
     AddressService,
   ],

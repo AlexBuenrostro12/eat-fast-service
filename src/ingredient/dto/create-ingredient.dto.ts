@@ -1,4 +1,5 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsString } from 'class-validator';
+import { INGREDIENT_TYPE } from '../enum/ingredient-type.enum';
 
 export class CreateIngredientDto {
   @IsString()
@@ -9,4 +10,7 @@ export class CreateIngredientDto {
 
   @IsBoolean()
   readonly required: boolean;
+
+  @IsEnum(INGREDIENT_TYPE)
+  readonly type: INGREDIENT_TYPE;
 }

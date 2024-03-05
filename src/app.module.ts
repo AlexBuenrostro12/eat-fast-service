@@ -11,7 +11,6 @@ import { OrderModule } from './order/order.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
 import { ProductModule } from './product/product.module';
 import { IngredientModule } from './ingredient/ingredient.module';
-import { ComplementModule } from './complement/complement.module';
 import { BusinessModule } from './business/business.module';
 import { AddressService } from './address/address.service';
 import { AddressController } from './address/address.controller';
@@ -22,13 +21,10 @@ import { Address } from './address/entity/address.entity';
 import { Business } from './business/entity/business.entity';
 import { Product } from './product/entity/product.entity';
 import { Ingredient } from './ingredient/entity/ingredient.entity';
-import { Complement } from './complement/entity/complement.entity';
 import { ProductService } from './product/product.service';
 import { IngredientService } from './ingredient/ingredient.service';
-import { ComplementService } from './complement/complement.service';
 import { ProductController } from './product/product.controller';
 import { IngredientController } from './ingredient/ingredient.controller';
-import { ComplementController } from './complement/complement.controller';
 import { OrderDetailController } from './order-detail/order-detail.controller';
 import { OrderDetailService } from './order-detail/order-detail.service';
 import { OrderDetail } from './order-detail/entity/oder-detail.entity';
@@ -53,7 +49,6 @@ import { OrderService } from './order/order.service';
       Business,
       Product,
       Ingredient,
-      Complement,
       OrderDetail,
       Order,
     ]),
@@ -63,7 +58,6 @@ import { OrderService } from './order/order.service';
     OrderDetailModule,
     ProductModule,
     IngredientModule,
-    ComplementModule,
     BusinessModule,
   ],
   controllers: [
@@ -74,7 +68,6 @@ import { OrderService } from './order/order.service';
     OrderController,
     ProductController,
     IngredientController,
-    ComplementController,
     OrderDetailController,
   ],
   providers: [
@@ -84,7 +77,6 @@ import { OrderService } from './order/order.service';
     BusinessService,
     ProductService,
     IngredientService,
-    ComplementService,
     OrderDetailService,
     OrderService,
   ],

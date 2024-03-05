@@ -20,7 +20,6 @@ export class BusinessService {
         address: true,
         product: {
           ingredient: true,
-          complement: true,
         },
       },
     });
@@ -33,7 +32,6 @@ export class BusinessService {
         address: true,
         product: {
           ingredient: true,
-          complement: true,
         },
       },
     });

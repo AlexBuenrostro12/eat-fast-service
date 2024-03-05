@@ -1,22 +1,21 @@
-import { Product } from 'src/product/entity/product.entity';
+import { OrderDetail } from 'src/order-detail/entity/oder-detail.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { INGREDIENT_TYPE } from '../../shared/enum/ingredient-type.enum';
 
 @Entity()
-export class Ingredient {
+export class OrderedProduct {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Product, (product) => product.ingredient)
-  product: Product;
+  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.product)
+  orderDetail: OrderDetail[];
 
   @Column()
   name: string;
@@ -25,10 +24,7 @@ export class Ingredient {
   description: string;
 
   @Column()
-  required: boolean;
-
-  @Column({ type: 'enum', enum: INGREDIENT_TYPE })
-  type: INGREDIENT_TYPE;
+  price: number;
 
   @CreateDateColumn()
   createdAt: Date;

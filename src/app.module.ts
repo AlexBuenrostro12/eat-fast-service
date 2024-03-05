@@ -30,6 +30,14 @@ import { OrderDetailService } from './order-detail/order-detail.service';
 import { OrderDetail } from './order-detail/entity/oder-detail.entity';
 import { Order } from './order/entity/oder.entity';
 import { OrderService } from './order/order.service';
+import { OrderedProduct } from './ordered-product/entity/ordered-product.entity';
+import { OrderedProductModule } from './ordered-product/ordered-product.module';
+import { OrderedProductController } from './ordered-product/ordered-product.controller';
+import { OrderedProductService } from './ordered-product/ordered-product.service';
+import { OrderedIngredient } from './ordered-ingredient/entity/odered-ingredient.entity';
+import { OrderedIngredientModule } from './ordered-ingredient/ordered-ingredient.module';
+import { OrderedIngredientController } from './ordered-ingredient/odered-ingredient.controller';
+import { OrderedIngredientService } from './ordered-ingredient/odered-ingredient.service';
 
 @Module({
   imports: [
@@ -51,6 +59,8 @@ import { OrderService } from './order/order.service';
       Ingredient,
       OrderDetail,
       Order,
+      OrderedProduct,
+      OrderedIngredient,
     ]),
     UserModule,
     AddressModule,
@@ -59,6 +69,8 @@ import { OrderService } from './order/order.service';
     ProductModule,
     IngredientModule,
     BusinessModule,
+    OrderedProductModule,
+    OrderedIngredientModule,
   ],
   controllers: [
     AppController,
@@ -69,6 +81,8 @@ import { OrderService } from './order/order.service';
     ProductController,
     IngredientController,
     OrderDetailController,
+    OrderedProductController,
+    OrderedIngredientController,
   ],
   providers: [
     AppService,
@@ -79,6 +93,8 @@ import { OrderService } from './order/order.service';
     IngredientService,
     OrderDetailService,
     OrderService,
+    OrderedProductService,
+    OrderedIngredientService,
   ],
 })
 export class AppModule {}

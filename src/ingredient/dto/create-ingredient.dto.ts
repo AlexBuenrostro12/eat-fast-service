@@ -1,5 +1,5 @@
 import { IsBoolean, IsEnum, IsString } from 'class-validator';
-import { INGREDIENT_TYPE } from '../enum/ingredient-type.enum';
+import { INGREDIENT_TYPE } from '../../shared/enum/ingredient-type.enum';
 
 export class CreateIngredientDto {
   @IsString()

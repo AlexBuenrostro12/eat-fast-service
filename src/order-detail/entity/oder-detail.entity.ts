@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Order } from 'src/order/entity/oder.entity';
-import { Product } from 'src/product/entity/product.entity';
 import { OrderedProduct } from 'src/ordered-product/entity/ordered-product.entity';
 import { OrderedIngredient } from 'src/ordered-ingredient/entity/odered-ingredient.entity';
 

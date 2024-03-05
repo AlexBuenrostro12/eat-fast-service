@@ -28,6 +28,12 @@ export class OrderedIngredientService {
     return orderedIngredient;
   }
 
+  async createMany(payload: Array<CreateOrderedIngredientDto>) {
+    const orderedIngredients = this.orderedIngredientRepository.create(payload);
+
+    return await this.orderedIngredientRepository.save(orderedIngredients);
+  }
+
   async create(payload: CreateOrderedIngredientDto) {
     const orderedIngredient = this.orderedIngredientRepository.create({
       ...payload,

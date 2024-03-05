@@ -4,11 +4,14 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Order } from 'src/order/entity/oder.entity';
 import { Product } from 'src/product/entity/product.entity';
+import { OrderedProduct } from 'src/ordered-product/entity/ordered-product.entity';
+import { OrderedIngredient } from 'src/ordered-ingredient/entity/odered-ingredient.entity';
 
 @Entity()
 export class OrderDetail {
@@ -18,12 +21,17 @@ export class OrderDetail {
   @ManyToOne(() => Order, (order) => order.orderDetail)
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderDetail)
-  product: Product;
+  @ManyToOne(
+    () => OrderedProduct,
+    (orderedProduct) => orderedProduct.orderDetail,
+  )
+  product: OrderedProduct;
 
-  // TODO: update here
-  // @Column('int', { array: true })
-  // ingredientIds: Array<number>;
+  @OneToMany(
+    () => OrderedIngredient,
+    (orderedIngredient) => orderedIngredient.orderDetail,
+  )
+  ingredients: OrderedIngredient[];
 
   @Column()
   quantity: number;

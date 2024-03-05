@@ -5,10 +5,15 @@ import { DataSource, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderDetailService } from 'src/order-detail/order-detail.service';
-import { ProductService } from 'src/product/product.service';
 import { CreateOrderDetailDto } from 'src/order-detail/dto/create-order-detail.dto';
 import { STATUS } from './enum/order.enum';
 import { OrderDetail } from 'src/order-detail/entity/oder-detail.entity';
+
+import { ProductService } from 'src/product/product.service';
+import { IngredientService } from 'src/ingredient/ingredient.service';
+import { OrderedProductService } from 'src/ordered-product/ordered-product.service';
+import { OrderedIngredientService } from 'src/ordered-ingredient/odered-ingredient.service';
+import { CreateOrderedIngredientDto } from 'src/ordered-ingredient/dto/create-ordered-ingredient.dto';
 
 @Injectable()
 export class OrderService {
@@ -17,6 +22,9 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
     private readonly orderDetailService: OrderDetailService,
     private readonly productService: ProductService,
+    private readonly orderedProductService: OrderedProductService,
+    private readonly ingredientsService: IngredientService,
+    private readonly orderedIngredientsService: OrderedIngredientService,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -24,9 +32,8 @@ export class OrderService {
     return this.orderRepository.find({
       relations: {
         orderDetail: {
-          product: {
-            ingredient: true,
-          },
+          product: true,
+          ingredients: true,
         },
       },
     });
@@ -37,9 +44,8 @@ export class OrderService {
       where: { id },
       relations: {
         orderDetail: {
-          product: {
-            ingredient: true,
-          },
+          product: true,
+          ingredients: true,
         },
         user: {
           address: true,
@@ -66,11 +72,33 @@ export class OrderService {
 
       for (const order of orders) {
         const product = await this.productService.findOneById(order.productId);
+        const ingredients = await this.ingredientsService.findManyById(
+          order.ingredientIds,
+        );
+        const orderedIngredientsPayload: Array<CreateOrderedIngredientDto> =
+          ingredients.map(({ name, description, type }) => ({
+            name,
+            description,
+            type,
+          }));
+
+        const orderedIngredients =
+          await this.orderedIngredientsService.createMany(
+            orderedIngredientsPayload,
+          );
+
+        const orderedProduct = await this.orderedProductService.create({
+          name: product.name,
+          description: product.description,
+          price: product.price,
+        });
+
         if (product) {
           total = total + product.price * order.quantity;
           orderDetailPayload.push({
             ...order,
-            product,
+            product: orderedProduct,
+            ingredients: orderedIngredients,
           });
         }
       }

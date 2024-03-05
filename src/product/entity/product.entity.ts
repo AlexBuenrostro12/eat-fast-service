@@ -1,6 +1,5 @@
 import { Business } from 'src/business/entity/business.entity';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
-import { OrderDetail } from 'src/order-detail/entity/oder-detail.entity';
 import {
   Column,
   CreateDateColumn,
@@ -19,9 +18,6 @@ export class Product {
 
   @ManyToOne(() => Business, (business) => business.product)
   business: Business;
-
-  @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.product)
-  orderDetail: OrderDetail[];
 
   @OneToMany(() => Ingredient, (ingredient) => ingredient.product)
   ingredient: Ingredient[];

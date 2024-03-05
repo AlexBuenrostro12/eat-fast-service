@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ingredient } from './entity/ingredient.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
 
@@ -26,6 +26,20 @@ export class IngredientService {
     }
 
     return ingredient;
+  }
+
+  async findManyById(ids: Array<number>) {
+    const orderedIngredient = await this.ingredientRepository.find({
+      where: { id: In(ids) },
+    });
+
+    if (!orderedIngredient) {
+      throw new NotFoundException(
+        `Ingredient with #${ids.join(', ')} not found`,
+      );
+    }
+
+    return orderedIngredient;
   }
 
   async create(payload: CreateIngredientDto) {

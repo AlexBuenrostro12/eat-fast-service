@@ -8,7 +8,6 @@ import { OrderDetailService } from 'src/order-detail/order-detail.service';
 import { CreateOrderDetailDto } from 'src/order-detail/dto/create-order-detail.dto';
 import { STATUS } from './enum/order.enum';
 import { OrderDetail } from 'src/order-detail/entity/oder-detail.entity';
-
 import { ProductService } from 'src/product/product.service';
 import { IngredientService } from 'src/ingredient/ingredient.service';
 import { OrderedProductService } from 'src/ordered-product/ordered-product.service';
@@ -130,15 +129,15 @@ export class OrderService {
     }
   }
 
-  async update(id: number, payload: UpdateOrderDto) {
-    const order = await this.orderRepository.preload({
-      id,
-      ...payload,
-    });
+  async update(id: number, { status, total }: UpdateOrderDto) {
+    const order = await this.findOneById(id);
 
     if (!order) {
       throw new NotFoundException(`Order with #${id} not found`);
     }
+
+    if (status) order.status = status;
+    if (total) order.total = total;
 
     return this.orderRepository.save(order);
   }

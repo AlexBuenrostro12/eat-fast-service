@@ -1,10 +1,12 @@
-import { IsEnum, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { STATUS } from '../enum/order.enum';
 
 export class UpdateOrderDto {
+  @IsOptional()
   @IsEnum(STATUS)
-  readonly status: STATUS;
+  readonly status?: STATUS;
 
+  @IsOptional()
   @IsNumber()
-  readonly total: number;
+  readonly total?: number;
 }

@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AddressService } from 'src/address/address.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -31,13 +36,21 @@ export class UserService {
     return user;
   }
 
-  async create({ address, ...payload }: CreateUserDto) {
+  async create({ address, email, password, ...payload }: CreateUserDto) {
+    await this.validateEmail(email);
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
     const newAddress = await this.addressService.create(address);
 
     const user = this.userRepository.create({ ...payload });
+    user.email = email;
+    user.password = hashedPassword;
     user.address = newAddress;
 
-    return await this.userRepository.save(user);
+    const createdUser = await this.userRepository.save(user);
+    delete createdUser.password;
+
+    return createdUser;
   }
 
   async update(id: number, payload: UpdateUserDto) {
@@ -55,5 +68,13 @@ export class UserService {
 
   async delete(id: number) {
     return await this.userRepository.softDelete(id);
+  }
+
+  private async validateEmail(email: string) {
+    const exist = await this.userRepository.findOne({ where: { email } });
+
+    if (exist) {
+      throw new BadRequestException(`Email: ${email} already exists`);
+    }
   }
 }

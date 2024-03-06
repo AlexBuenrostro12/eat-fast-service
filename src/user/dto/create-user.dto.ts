@@ -17,7 +17,7 @@ export class CreateUserDto {
   readonly phone: number;
 
   @IsString()
-  readonly passsword: string;
+  readonly password: string;
 
   @IsOptional()
   @Type(() => CreateAddressDto)

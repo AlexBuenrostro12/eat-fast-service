@@ -37,7 +37,7 @@ export class User {
   phone: number;
 
   @Column()
-  passsword: string;
+  password: string;
 
   @CreateDateColumn()
   createdAt: Date;

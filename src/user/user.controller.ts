@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserEmailDto } from './dto/update-user-email.dto';
 
 @Controller('user')
 export class UserController {
@@ -33,6 +34,11 @@ export class UserController {
   @Patch(':id')
   update(@Param('id') id: number, @Body() payload: UpdateUserDto) {
     return this.userService.update(id, payload);
+  }
+
+  @Patch('update-email/:id')
+  updateEmail(@Param('id') id: number, @Body() payload: UpdateUserEmailDto) {
+    return this.userService.updateEmail(id, payload);
   }
 
   @Delete(':id')

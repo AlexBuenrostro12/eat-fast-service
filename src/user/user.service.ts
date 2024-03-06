@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AddressService } from 'src/address/address.service';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserEmailDto } from './dto/update-user-email.dto';
 
 @Injectable()
 export class UserService {
@@ -78,6 +79,16 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async updateEmail(id: number, { oldEmail, newEmail }: UpdateUserEmailDto) {
+    const user = await this.findOneByEmail(id, oldEmail);
+
+    if (user) {
+      user.email = newEmail;
+    }
+
+    return this.userRepository.save(user);
+  }
+
   async delete(id: number) {
     return await this.userRepository.softDelete(id);
   }
@@ -88,5 +99,15 @@ export class UserService {
     if (exist) {
       throw new BadRequestException(`Email: ${email} already exists`);
     }
+  }
+
+  private async findOneByEmail(id: number, email: string) {
+    const user = await this.userRepository.findOne({ where: { id, email } });
+
+    if (!user) {
+      throw new NotFoundException(`User with email: ${email} not exist`);
+    }
+
+    return user;
   }
 }

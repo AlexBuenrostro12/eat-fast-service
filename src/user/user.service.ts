@@ -53,15 +53,27 @@ export class UserService {
     return createdUser;
   }
 
-  async update(id: number, payload: UpdateUserDto) {
-    const user = await this.userRepository.preload({
-      id,
-      ...payload,
-    });
+  async update(
+    id: number,
+    { firstname, lastname, phone, address }: UpdateUserDto,
+  ) {
+    const user = await this.findOneById(id);
 
     if (!user) {
       throw new NotFoundException(`User with #${id} not found`);
     }
+
+    if (firstname) user.firstname = firstname;
+    if (lastname) user.lastname = lastname;
+    if (phone) user.phone = phone;
+
+    if (address)
+      user.address = {
+        ...user.address,
+        street: address.street,
+        number: address.number,
+        cologne: address.cologne,
+      };
 
     return this.userRepository.save(user);
   }

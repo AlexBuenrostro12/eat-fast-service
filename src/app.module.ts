@@ -41,6 +41,8 @@ import { OrderedIngredientService } from './ordered-ingredient/odered-ingredient
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guard/auth.guard';
 
 @Module({
   imports: [
@@ -101,6 +103,10 @@ import { AuthService } from './auth/auth.service';
     OrderedProductService,
     OrderedIngredientService,
     AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

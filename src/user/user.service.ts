@@ -66,6 +66,19 @@ export class UserService {
     return user;
   }
 
+  async findOneByEmail(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: { id: true, email: true, password: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with email: ${email} not exist`);
+    }
+
+    return user;
+  }
+
   async create({ address, email, password, ...payload }: CreateUserDto) {
     await this.validateEmail(email);
     const salt = await bcrypt.genSalt();
@@ -106,7 +119,7 @@ export class UserService {
   }
 
   async updateEmail(id: number, { oldEmail, newEmail }: UpdateUserEmailDto) {
-    const user = await this.findOneByEmail(id, oldEmail);
+    const user = await this.findOneByIdAndEmail(id, oldEmail);
 
     if (user) {
       user.email = newEmail;
@@ -152,7 +165,7 @@ export class UserService {
     }
   }
 
-  private async findOneByEmail(id: number, email: string) {
+  private async findOneByIdAndEmail(id: number, email: string) {
     const user = await this.userRepository.findOne({ where: { id, email } });
 
     if (!user) {

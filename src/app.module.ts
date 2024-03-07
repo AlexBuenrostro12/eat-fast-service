@@ -38,6 +38,9 @@ import { OrderedIngredient } from './ordered-ingredient/entity/odered-ingredient
 import { OrderedIngredientModule } from './ordered-ingredient/ordered-ingredient.module';
 import { OrderedIngredientController } from './ordered-ingredient/odered-ingredient.controller';
 import { OrderedIngredientService } from './ordered-ingredient/odered-ingredient.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -71,6 +74,7 @@ import { OrderedIngredientService } from './ordered-ingredient/odered-ingredient
     BusinessModule,
     OrderedProductModule,
     OrderedIngredientModule,
+    AuthModule,
   ],
   controllers: [
     AppController,
@@ -83,6 +87,7 @@ import { OrderedIngredientService } from './ordered-ingredient/odered-ingredient
     OrderDetailController,
     OrderedProductController,
     OrderedIngredientController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -95,6 +100,7 @@ import { OrderedIngredientService } from './ordered-ingredient/odered-ingredient
     OrderService,
     OrderedProductService,
     OrderedIngredientService,
+    AuthService,
   ],
 })
 export class AppModule {}

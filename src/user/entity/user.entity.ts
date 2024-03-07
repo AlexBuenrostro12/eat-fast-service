@@ -36,7 +36,7 @@ export class User {
   @Column({ type: 'bigint' })
   phone: number;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @CreateDateColumn()

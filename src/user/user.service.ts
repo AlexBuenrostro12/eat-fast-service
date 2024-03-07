@@ -5,12 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsSelect, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AddressService } from 'src/address/address.service';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserEmailDto } from './dto/update-user-email.dto';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 @Injectable()
 export class UserService {
@@ -21,13 +22,41 @@ export class UserService {
   ) {}
 
   findAll() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      select: [
+        'id',
+        'firstname',
+        'lastname',
+        'email',
+        'phone',
+        'createdAt',
+        'updatedAt',
+        'deletedAt',
+        'address',
+      ],
+    });
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number, selectKey?: FindOptionsSelect<User>) {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: ['address'],
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        email: true,
+        phone: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+        address: {
+          street: true,
+          number: true,
+          cologne: true,
+        },
+        ...selectKey,
+      },
     });
 
     if (!user) {
@@ -49,7 +78,6 @@ export class UserService {
     user.address = newAddress;
 
     const createdUser = await this.userRepository.save(user);
-    delete createdUser.password;
 
     return createdUser;
   }
@@ -60,21 +88,19 @@ export class UserService {
   ) {
     const user = await this.findOneById(id);
 
-    if (!user) {
-      throw new NotFoundException(`User with #${id} not found`);
+    if (user) {
+      if (firstname) user.firstname = firstname;
+      if (lastname) user.lastname = lastname;
+      if (phone) user.phone = phone;
+
+      if (address)
+        user.address = {
+          ...user.address,
+          street: address.street,
+          number: address.number,
+          cologne: address.cologne,
+        };
     }
-
-    if (firstname) user.firstname = firstname;
-    if (lastname) user.lastname = lastname;
-    if (phone) user.phone = phone;
-
-    if (address)
-      user.address = {
-        ...user.address,
-        street: address.street,
-        number: address.number,
-        cologne: address.cologne,
-      };
 
     return this.userRepository.save(user);
   }
@@ -87,6 +113,31 @@ export class UserService {
     }
 
     return this.userRepository.save(user);
+  }
+
+  async updatePassword(
+    id: number,
+    { currentPassword, newPassword }: UpdateUserPasswordDto,
+  ) {
+    const user = await this.findOneById(id, { password: true });
+
+    if (user) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+      if (!isMatch) {
+        throw new BadRequestException(
+          `User password: ${currentPassword} not match`,
+        );
+      }
+
+      const hashedPassword = await this.hassPassword(newPassword);
+
+      user.password = hashedPassword;
+
+      await this.userRepository.save(user);
+
+      return user;
+    }
   }
 
   async delete(id: number) {
@@ -109,5 +160,10 @@ export class UserService {
     }
 
     return user;
+  }
+
+  private async hassPassword(password: string) {
+    const salt = await bcrypt.genSalt();
+    return await bcrypt.hash(password, salt);
   }
 }

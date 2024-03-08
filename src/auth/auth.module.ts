@@ -8,6 +8,9 @@ import { Address } from 'src/address/entity/address.entity';
 import { AddressService } from 'src/address/address.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './strategy/local.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -16,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     TypeOrmModule.forFeature([User, Address]),
+    PassportModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
@@ -23,6 +27,12 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, AddressService],
+  providers: [
+    AuthService,
+    UserService,
+    AddressService,
+    LocalStrategy,
+    JwtStrategy,
+  ],
 })
 export class AuthModule {}

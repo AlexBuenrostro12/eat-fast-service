@@ -43,16 +43,21 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guard/auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres', // type of our database
-      host: 'localhost', // database host
-      port: 5432, // database host
-      username: 'postgres', // username
-      password: 'Password1!', // user password
-      database: 'eat-fast-dev', // name of our database,
+      host: process.env.DB_HOST, // database host
+      port: +process.env.DB_PORT || 5432, // database host
+      username: process.env.DB_USERNAME, // username
+      password: process.env.DB_PASSWORD, // user password
+      database: process.env.DB_DATA_BASE, // name of our database,
       autoLoadEntities: true, // models will be loaded automatically
       synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
     }),

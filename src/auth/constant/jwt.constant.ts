@@ -1,4 +1,4 @@
 export const JWT_CONSTANTS = {
-  secret: 'db962298-0fb1-40ca-ae6c-fcbd4dc5cec3',
-  expiresIn: '3h',
+  secret: process.env.JWT_SECRET,
+  expiresIn: process.env.JWT_EXPIRES_IN,
 };

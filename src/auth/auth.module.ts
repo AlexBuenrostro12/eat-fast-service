@@ -7,15 +7,19 @@ import { User } from 'src/user/entity/user.entity';
 import { Address } from 'src/address/entity/address.entity';
 import { AddressService } from 'src/address/address.service';
 import { JwtModule } from '@nestjs/jwt';
-import { JWT_CONSTANTS } from './constant/jwt.constant';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+      isGlobal: true,
+    }),
     TypeOrmModule.forFeature([User, Address]),
     JwtModule.register({
       global: true,
-      secret: JWT_CONSTANTS.secret,
-      signOptions: { expiresIn: JWT_CONSTANTS.expiresIn },
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
   ],
   controllers: [AuthController],

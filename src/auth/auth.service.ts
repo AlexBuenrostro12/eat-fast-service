@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  private readonly jwtRefreshExpiresIn;
+  private readonly jwtRefreshExpiresIn: string;
   constructor(
     private userService: UserService,
     private jwtService: JwtService,

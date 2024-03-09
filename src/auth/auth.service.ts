@@ -11,11 +11,12 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private configService: ConfigService<{ EXPIRES_IN: string }, true>,
+    private configService: ConfigService<
+      { JWT_REFRESH_EXPIRES_IN: string },
+      true
+    >,
   ) {
-    this.jwtRefreshExpiresIn = this.configService.get('EXPIRES_IN', {
-      infer: true,
-    });
+    this.jwtRefreshExpiresIn = this.configService.get('JWT_REFRESH_EXPIRES_IN');
   }
 
   async validateUser(email: string, password: string): Promise<User> {

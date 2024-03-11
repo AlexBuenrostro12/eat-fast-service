@@ -27,8 +27,9 @@ export class OrderService {
     private readonly dataSource: DataSource,
   ) {}
 
-  findAll() {
+  findAll(userId: number) {
     return this.orderRepository.find({
+      where: { user: { id: userId } },
       relations: {
         orderDetail: {
           product: true,
@@ -38,9 +39,9 @@ export class OrderService {
     });
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number, userId: number) {
     const order = await this.orderRepository.findOne({
-      where: { id },
+      where: { id, user: { id: userId } },
       relations: {
         orderDetail: {
           product: true,
@@ -59,7 +60,7 @@ export class OrderService {
     return order;
   }
 
-  async create({ userId, orders }: CreateOrderDto) {
+  async create(userId: number, { orders }: CreateOrderDto) {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -129,8 +130,8 @@ export class OrderService {
     }
   }
 
-  async update(id: number, { status, total }: UpdateOrderDto) {
-    const order = await this.findOneById(id);
+  async update(id: number, userId: number, { status, total }: UpdateOrderDto) {
+    const order = await this.findOneById(id, userId);
 
     if (!order) {
       throw new NotFoundException(`Order with #${id} not found`);
@@ -142,7 +143,7 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-  async delete(id: number) {
-    return await this.orderRepository.softDelete(id);
+  async delete(id: number, userId: number) {
+    return await this.orderRepository.softDelete({ id, user: { id: userId } });
   }
 }

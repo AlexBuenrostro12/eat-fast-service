@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { LoggedInUser } from './dto/auth-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,7 @@ export class AuthService {
   }
 
   async login(
-    user: User,
+    user: LoggedInUser,
   ): Promise<{ access_token: string; refresh_token: string }> {
     const payload = { email: user.email, sub: user.id };
     return {
@@ -45,7 +46,7 @@ export class AuthService {
     };
   }
 
-  async refreshToken(user: User): Promise<{ access_token: string }> {
+  async refreshToken(user: LoggedInUser): Promise<{ access_token: string }> {
     const payload = { email: user.email, sub: user.id };
 
     return {

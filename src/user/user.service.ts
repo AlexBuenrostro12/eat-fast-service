@@ -119,6 +119,7 @@ export class UserService {
   }
 
   async updateEmail(id: number, { oldEmail, newEmail }: UpdateUserEmailDto) {
+    await this.validateEmail(newEmail);
     const user = await this.findOneByIdAndEmail(id, oldEmail);
 
     if (user) {
@@ -148,6 +149,8 @@ export class UserService {
       user.password = hashedPassword;
 
       await this.userRepository.save(user);
+
+      delete user.password;
 
       return user;
     }

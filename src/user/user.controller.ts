@@ -5,13 +5,10 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdateUserEmailDto } from './dto/update-user-email.dto';
-import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -23,31 +20,14 @@ export class UserController {
   }
 
   @Get(':id')
-  findOneById(@Param('id') id: number) {
+  findOneById(@Request() req: any, @Param('id') id: number) {
+    console.log('@Request() req: any: ', req.user);
     return this.userService.findOneById(id);
-  }
-
-  @Post()
-  create(@Body() payload: CreateUserDto) {
-    return this.userService.create(payload);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() payload: UpdateUserDto) {
     return this.userService.update(id, payload);
-  }
-
-  @Patch('update-email/:id')
-  updateEmail(@Param('id') id: number, @Body() payload: UpdateUserEmailDto) {
-    return this.userService.updateEmail(id, payload);
-  }
-
-  @Patch('update-password/:id')
-  updatePassword(
-    @Param('id') id: number,
-    @Body() payload: UpdateUserPasswordDto,
-  ) {
-    return this.userService.updatePassword(id, payload);
   }
 
   @Delete(':id')

@@ -1,11 +1,13 @@
 import { Address } from 'src/address/entity/address.entity';
 import { Product } from 'src/product/entity/product.entity';
+import { User } from 'src/user/entity/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -16,6 +18,9 @@ import {
 export class Business {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(() => User, (user) => user.business)
+  user: User;
 
   @OneToMany(() => Product, (product) => product.business)
   product: Product[];

@@ -9,15 +9,20 @@ import { Business } from 'src/business/entity/business.entity';
 import { BusinessService } from 'src/business/business.service';
 import { Address } from 'src/address/entity/address.entity';
 import { AddressService } from 'src/address/address.service';
+import { User } from 'src/user/entity/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, Ingredient, Business, Address])],
+  imports: [
+    TypeOrmModule.forFeature([Product, Ingredient, Business, Address, User]),
+  ],
   controllers: [ProductController],
   providers: [
     ProductService,
     IngredientService,
     BusinessService,
     AddressService,
+    UserService,
   ],
 })
 export class ProductModule {}

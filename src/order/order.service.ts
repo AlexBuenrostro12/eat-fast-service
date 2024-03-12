@@ -71,7 +71,10 @@ export class OrderService {
       let total = 0;
 
       for (const order of orders) {
-        const product = await this.productService.findOneById(order.productId);
+        const product = await this.productService.findOneById(
+          order.productId,
+          userId,
+        );
         const ingredients = await this.ingredientsService.findManyById(
           order.ingredientIds,
         );

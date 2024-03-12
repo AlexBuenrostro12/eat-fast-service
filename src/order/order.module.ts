@@ -17,6 +17,8 @@ import { Product } from 'src/product/entity/product.entity';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
 import { ProductService } from 'src/product/product.service';
 import { IngredientService } from 'src/ingredient/ingredient.service';
+import { User } from 'src/user/entity/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { IngredientService } from 'src/ingredient/ingredient.service';
       OrderedIngredient,
       Business,
       Address,
+      User,
     ]),
   ],
   controllers: [OrderController],
@@ -41,6 +44,7 @@ import { IngredientService } from 'src/ingredient/ingredient.service';
     OrderedProductService,
     BusinessService,
     AddressService,
+    UserService,
   ],
 })
 export class OrderModule {}

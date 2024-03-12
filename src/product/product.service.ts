@@ -17,15 +17,16 @@ export class ProductService {
     private readonly businessService: BusinessService,
   ) {}
 
-  findAll() {
+  findAll(userId: number) {
     return this.productRepository.find({
+      where: { business: { user: { id: userId } } },
       relations: ['ingredient'],
     });
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number, userId: number) {
     const product = await this.productRepository.findOne({
-      where: { id },
+      where: { id, business: { user: { id: userId } } },
       relations: ['ingredient'],
     });
 
@@ -36,11 +37,10 @@ export class ProductService {
     return product;
   }
 
-  async createByBusinessId({
-    businessId,
-    ingredients,
-    ...payload
-  }: CreateProductDto) {
+  async createByBusinessId(
+    { businessId, ingredients, ...payload }: CreateProductDto,
+    userId: number,
+  ) {
     const arrayOfIngredientsPromise: Array<Promise<Ingredient>> = [];
     ingredients.forEach((ingredient) => {
       arrayOfIngredientsPromise.push(this.ingredientService.create(ingredient));
@@ -53,8 +53,11 @@ export class ProductService {
     const newProduct = await this.productRepository.save(product);
 
     if (newProduct) {
-      const business = await this.businessService.findOneById(businessId);
-      await this.businessService.update(businessId, {
+      const business = await this.businessService.findOneById(
+        businessId,
+        userId,
+      );
+      await this.businessService.update(businessId, userId, {
         product: [...business.product, newProduct],
       });
     }
@@ -62,15 +65,21 @@ export class ProductService {
     return newProduct;
   }
 
-  async update(id: number, payload: UpdateProductDto) {
-    const product = await this.productRepository.preload({
-      id,
-      ...payload,
-    });
+  async update(
+    id: number,
+    userId: number,
+    { name, description, price, ingredient }: UpdateProductDto,
+  ) {
+    const product = await this.findOneById(id, userId);
 
     if (!product) {
       throw new NotFoundException(`Product with #${id} not found`);
     }
+
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (price) product.price = price;
+    if (ingredient) product.ingredient = [...product.ingredient, ...ingredient];
 
     return this.productRepository.save(product);
   }

@@ -1,4 +1,5 @@
 import { Address } from 'src/address/entity/address.entity';
+import { Business } from 'src/business/entity/business.entity';
 import { Order } from 'src/order/entity/oder.entity';
 import {
   Column,
@@ -23,6 +24,9 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.user)
   order: Order[];
+
+  @OneToMany(() => Business, (business) => business.user)
+  business: Business[];
 
   @Column()
   firstname: string;

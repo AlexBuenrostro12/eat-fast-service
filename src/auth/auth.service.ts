@@ -37,7 +37,7 @@ export class AuthService {
   async login(
     user: LoggedInUser,
   ): Promise<{ access_token: string; refresh_token: string }> {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id, role: user.role };
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: this.jwtRefreshExpiresIn,
     });
@@ -51,7 +51,7 @@ export class AuthService {
   }
 
   async refreshToken(user: LoggedInUser): Promise<{ access_token: string }> {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id, role: user.role };
 
     return {
       access_token: this.jwtService.sign(payload),

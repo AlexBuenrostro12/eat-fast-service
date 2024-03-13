@@ -1,6 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CreateAddressDto } from 'src/address/dto/create-address.dto';
+import { USER_ROLE } from '../enum/user-role.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -15,6 +22,9 @@ export class CreateUserDto {
 
   @IsNumber()
   readonly phone: number;
+
+  @IsEnum(USER_ROLE)
+  readonly role: USER_ROLE;
 
   @IsString()
   readonly password: string;

@@ -21,7 +21,6 @@ export class UserController {
 
   @Get(':id')
   findOneById(@Request() req: any, @Param('id') id: number) {
-    console.log('@Request() req: any: ', req.user);
     return this.userService.findOneById(id);
   }
 

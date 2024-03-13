@@ -7,6 +7,7 @@ import { UpdateAddressDto } from 'src/address/dto/update-address.dto';
 class OmitedUserDto extends OmitType(CreateUserDto, [
   'password',
   'address',
+  'role',
 ] as const) {}
 
 export class UpdateUserDto extends PartialType(OmitedUserDto) {

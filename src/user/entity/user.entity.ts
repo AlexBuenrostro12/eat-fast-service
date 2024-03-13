@@ -12,6 +12,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { USER_ROLE } from '../enum/user-role.enum';
 
 @Entity()
 export class User {
@@ -39,6 +40,13 @@ export class User {
 
   @Column({ type: 'bigint' })
   phone: number;
+
+  @Column({
+    type: 'enum',
+    enum: USER_ROLE,
+    default: USER_ROLE.USER,
+  })
+  role: USER_ROLE;
 
   @Column({ select: false })
   password: string;

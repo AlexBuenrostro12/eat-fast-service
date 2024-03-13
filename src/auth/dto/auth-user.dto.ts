@@ -7,6 +7,9 @@ export class LoggedInUser {
   @IsEmail()
   @IsString()
   readonly email: string;
+
+  @IsString()
+  readonly role: string;
 }
 
 export class AuthUserDto {

@@ -33,6 +33,9 @@ export class UserService {
         'updatedAt',
         'deletedAt',
         'address',
+        'role',
+        'refreshToken',
+        'forgotPasswordToken',
       ],
     });
   }
@@ -47,6 +50,9 @@ export class UserService {
         lastname: true,
         email: true,
         phone: true,
+        role: true,
+        refreshToken: true,
+        forgotPasswordToken: true,
         createdAt: true,
         updatedAt: true,
         deletedAt: true,
@@ -69,7 +75,7 @@ export class UserService {
   async findOneByEmail(email: string) {
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { id: true, email: true, password: true },
+      select: { id: true, email: true, password: true, role: true },
     });
 
     if (!user) {
@@ -91,6 +97,8 @@ export class UserService {
     user.address = newAddress;
 
     const createdUser = await this.userRepository.save(user);
+
+    delete createdUser.password;
 
     return createdUser;
   }

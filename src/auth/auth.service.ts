@@ -38,11 +38,15 @@ export class AuthService {
     user: LoggedInUser,
   ): Promise<{ access_token: string; refresh_token: string }> {
     const payload = { email: user.email, sub: user.id };
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: this.jwtRefreshExpiresIn,
+    });
+
+    await this.userService.update(user.id, { refreshToken });
+
     return {
       access_token: this.jwtService.sign(payload),
-      refresh_token: this.jwtService.sign(payload, {
-        expiresIn: this.jwtRefreshExpiresIn,
-      }),
+      refresh_token: refreshToken,
     };
   }
 

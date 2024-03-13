@@ -97,7 +97,14 @@ export class UserService {
 
   async update(
     id: number,
-    { firstname, lastname, phone, address }: UpdateUserDto,
+    {
+      firstname,
+      lastname,
+      phone,
+      address,
+      refreshToken,
+      forgotPasswordToken,
+    }: UpdateUserDto,
   ) {
     const user = await this.findOneById(id);
 
@@ -105,7 +112,6 @@ export class UserService {
       if (firstname) user.firstname = firstname;
       if (lastname) user.lastname = lastname;
       if (phone) user.phone = phone;
-
       if (address)
         user.address = {
           ...user.address,
@@ -113,6 +119,8 @@ export class UserService {
           number: address.number,
           cologne: address.cologne,
         };
+      if (refreshToken) user.refreshToken = refreshToken;
+      if (forgotPasswordToken) user.forgotPasswordToken = forgotPasswordToken;
     }
 
     return this.userRepository.save(user);

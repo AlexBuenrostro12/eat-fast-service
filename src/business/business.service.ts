@@ -16,9 +16,8 @@ export class BusinessService {
     private readonly userService: UserService,
   ) {}
 
-  findAll(userId: number) {
+  findAll() {
     return this.businessRepository.find({
-      where: { user: { id: userId } },
       relations: {
         address: true,
         product: {
@@ -28,9 +27,9 @@ export class BusinessService {
     });
   }
 
-  async findOneById(id: number, userId: number) {
+  async findOneById(id: number) {
     const business = await this.businessRepository.findOne({
-      where: { id, user: { id: userId } },
+      where: { id },
       relations: {
         address: true,
         product: {
@@ -62,10 +61,9 @@ export class BusinessService {
 
   async update(
     id: number,
-    userId: number,
     { name, phone, address, start, end, open, product }: UpdateBusinessDto,
   ) {
-    const business = await this.findOneById(id, userId);
+    const business = await this.findOneById(id);
 
     if (!business) {
       throw new NotFoundException(`Business with #${id} not found`);

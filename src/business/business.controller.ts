@@ -18,13 +18,13 @@ export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
 
   @Get()
-  findAll(@Request() req: AuthUserDto) {
-    return this.businessService.findAll(req.user.id);
+  findAll() {
+    return this.businessService.findAll();
   }
 
   @Get(':id')
-  findOneById(@Param('id') id: number, @Request() req: AuthUserDto) {
-    return this.businessService.findOneById(id, req.user.id);
+  findOneById(@Param('id') id: number) {
+    return this.businessService.findOneById(id);
   }
 
   @Post()
@@ -33,12 +33,8 @@ export class BusinessController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: number,
-    @Request() req: AuthUserDto,
-    @Body() payload: UpdateBusinessDto,
-  ) {
-    return this.businessService.update(id, req.user.id, payload);
+  update(@Param('id') id: number, @Body() payload: UpdateBusinessDto) {
+    return this.businessService.update(id, payload);
   }
 
   @Delete(':id')

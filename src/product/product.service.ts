@@ -37,10 +37,11 @@ export class ProductService {
     return product;
   }
 
-  async createByBusinessId(
-    { businessId, ingredients, ...payload }: CreateProductDto,
-    userId: number,
-  ) {
+  async createByBusinessId({
+    businessId,
+    ingredients,
+    ...payload
+  }: CreateProductDto) {
     const arrayOfIngredientsPromise: Array<Promise<Ingredient>> = [];
     ingredients.forEach((ingredient) => {
       arrayOfIngredientsPromise.push(this.ingredientService.create(ingredient));
@@ -53,11 +54,8 @@ export class ProductService {
     const newProduct = await this.productRepository.save(product);
 
     if (newProduct) {
-      const business = await this.businessService.findOneById(
-        businessId,
-        userId,
-      );
-      await this.businessService.update(businessId, userId, {
+      const business = await this.businessService.findOneById(businessId);
+      await this.businessService.update(businessId, {
         product: [...business.product, newProduct],
       });
     }

@@ -28,11 +28,8 @@ export class ProductController {
   }
 
   @Post()
-  createByBusinessId(
-    @Body() payload: CreateProductDto,
-    @Request() req: AuthUserDto,
-  ) {
-    return this.productService.createByBusinessId(payload, req.user.id);
+  createByBusinessId(@Body() payload: CreateProductDto) {
+    return this.productService.createByBusinessId(payload);
   }
 
   @Patch(':id')

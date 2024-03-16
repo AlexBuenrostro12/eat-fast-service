@@ -120,13 +120,17 @@ export class UserService {
       if (firstname) user.firstname = firstname;
       if (lastname) user.lastname = lastname;
       if (phone) user.phone = phone;
-      if (address)
-        user.address = {
-          ...user.address,
-          street: address.street,
-          number: address.number,
-          cologne: address.cologne,
-        };
+      if (address) {
+        if (address.street) {
+          user.address.street = address.street;
+        }
+        if (address.number) {
+          user.address.number = address.number;
+        }
+        if (address.cologne) {
+          user.address.cologne = address.cologne;
+        }
+      }
       if (refreshToken) user.refreshToken = refreshToken;
       if (forgotPasswordToken) user.forgotPasswordToken = forgotPasswordToken;
     }

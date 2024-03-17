@@ -59,7 +59,10 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD, // user password
       database: process.env.DB_DATA_BASE, // name of our database,
       autoLoadEntities: true, // models will be loaded automatically
-      synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
+      synchronize: false, // your entities will be synced with the database(recommended: disable in prod)
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     TypeOrmModule.forFeature([
       User,

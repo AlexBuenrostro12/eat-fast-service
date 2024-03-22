@@ -87,7 +87,7 @@ export class BusinessService {
       };
     if (start) business.start = start;
     if (end) business.end = end;
-    if (open) business.open = open;
+    if (open !== undefined) business.open = open;
     if (deliveryFee) business.deliveryFee = deliveryFee;
     if (product) business.product = [...business.product, ...product];
 

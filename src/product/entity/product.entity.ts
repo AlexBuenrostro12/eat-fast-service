@@ -31,6 +31,9 @@ export class Product {
   @Column()
   price: number;
 
+  @Column({ default: true })
+  inStock: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

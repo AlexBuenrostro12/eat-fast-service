@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
 
 export class UpdateProductDto {
@@ -18,4 +18,8 @@ export class UpdateProductDto {
   @Type(() => Array<Ingredient>)
   @IsOptional()
   readonly ingredient?: Ingredient[];
+
+  @IsOptional()
+  @IsBoolean()
+  readonly inStock?: boolean;
 }

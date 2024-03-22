@@ -19,7 +19,7 @@ export class OrderController {
 
   @Get('all')
   findAll(@Request() req: AuthUserDto) {
-    return this.orderService.findAll(req.user.id);
+    return this.orderService.findAll(req.user.id, req.user.role);
   }
 
   @Get(':id')

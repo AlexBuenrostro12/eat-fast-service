@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entity/oder.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderDetailService } from 'src/order-detail/order-detail.service';
@@ -13,6 +13,8 @@ import { IngredientService } from 'src/ingredient/ingredient.service';
 import { OrderedProductService } from 'src/ordered-product/ordered-product.service';
 import { OrderedIngredientService } from 'src/ordered-ingredient/odered-ingredient.service';
 import { CreateOrderedIngredientDto } from 'src/ordered-ingredient/dto/create-ordered-ingredient.dto';
+import { USER_ROLE } from 'src/user/enum/user-role.enum';
+import { BusinessService } from 'src/business/business.service';
 
 @Injectable()
 export class OrderService {
@@ -20,6 +22,7 @@ export class OrderService {
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     private readonly orderDetailService: OrderDetailService,
+    private readonly businessService: BusinessService,
     private readonly productService: ProductService,
     private readonly orderedProductService: OrderedProductService,
     private readonly ingredientsService: IngredientService,
@@ -27,13 +30,35 @@ export class OrderService {
     private readonly dataSource: DataSource,
   ) {}
 
-  findAll(userId: number) {
+  findAll(userId: number, role: USER_ROLE) {
+    let condition: FindOptionsWhere<Order> | FindOptionsWhere<Order>[] = {};
+
+    if (role === USER_ROLE.USER) {
+      condition = { user: { id: userId } };
+    }
+
     return this.orderRepository.find({
-      where: { user: { id: userId } },
+      where: condition,
       relations: {
+        business: true,
+        user: {
+          address: true,
+        },
         orderDetail: {
           product: true,
           ingredients: true,
+        },
+      },
+      select: {
+        user: {
+          firstname: true,
+          lastname: true,
+          phone: true,
+          address: {
+            street: true,
+            number: true,
+            cologne: true,
+          },
         },
       },
     });
@@ -43,12 +68,25 @@ export class OrderService {
     const order = await this.orderRepository.findOne({
       where: { id, user: { id: userId } },
       relations: {
+        business: true,
+        user: {
+          address: true,
+        },
         orderDetail: {
           product: true,
           ingredients: true,
         },
+      },
+      select: {
         user: {
-          address: true,
+          firstname: true,
+          lastname: true,
+          phone: true,
+          address: {
+            street: true,
+            number: true,
+            cologne: true,
+          },
         },
       },
     });
@@ -60,15 +98,17 @@ export class OrderService {
     return order;
   }
 
-  async create(userId: number, { orders }: CreateOrderDto) {
+  async create(userId: number, { businessId, orders }: CreateOrderDto) {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
+      const business = await this.businessService.findOneById(businessId);
       const orderDetailPayload: Array<CreateOrderDetailDto> = [];
-      let total = 0;
+      // set up total with delivery feed cost of the business if does not exist set up with 0
+      let total = business ? business.deliveryFee : 0;
 
       for (const order of orders) {
         const product = await this.productService.findOneById(
@@ -114,6 +154,7 @@ export class OrderService {
         status: STATUS.PENDING,
         total,
         user: { id: userId },
+        business: { id: businessId },
       });
 
       const orderResponse = await queryRunner.manager.save(Order, order);

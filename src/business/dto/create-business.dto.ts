@@ -21,4 +21,7 @@ export class CreateBusinessDto {
 
   @IsBoolean()
   readonly open: boolean;
+
+  @IsNumber()
+  readonly deliveryFee: number;
 }

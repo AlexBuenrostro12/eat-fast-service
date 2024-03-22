@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { CreateIngredientDto } from 'src/ingredient/dto/create-ingredient.dto';
+import { PRODUCT_TYPE } from 'src/user/enum/product.enum';
 
 export class CreateProductDto {
   @IsNumber()
@@ -13,7 +14,20 @@ export class CreateProductDto {
   readonly description: string;
 
   @IsNumber()
-  readonly price: number;
+  @IsOptional()
+  readonly price?: number;
+
+  @IsEnum(PRODUCT_TYPE)
+  @IsOptional()
+  readonly type?: PRODUCT_TYPE;
+
+  @IsNumber()
+  @IsOptional()
+  readonly minPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly maxPrice?: number;
 
   @Type(() => Array<CreateIngredientDto>)
   readonly ingredients: CreateIngredientDto[];

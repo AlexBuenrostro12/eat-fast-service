@@ -55,7 +55,6 @@ export class ProductService {
     const newIngredients = await Promise.all(arrayOfIngredientsPromise);
     const product = this.productRepository.create({
       ...payload,
-      inStock: true,
     });
 
     product.ingredient = [...newIngredients];
@@ -74,7 +73,16 @@ export class ProductService {
   async update(
     id: number,
     userId: number,
-    { name, description, price, ingredient, inStock }: UpdateProductDto,
+    {
+      name,
+      description,
+      price,
+      ingredient,
+      inStock,
+      type,
+      minPrice,
+      maxPrice,
+    }: UpdateProductDto,
   ) {
     const product = await this.findOneById(id, userId);
 
@@ -87,6 +95,9 @@ export class ProductService {
     if (price) product.price = price;
     if (inStock !== undefined) product.inStock = inStock;
     if (ingredient) product.ingredient = [...product.ingredient, ...ingredient];
+    if (type) product.type = type;
+    if (minPrice) product.minPrice = minPrice;
+    if (maxPrice) product.maxPrice = minPrice;
 
     return this.productRepository.save(product);
   }

@@ -16,6 +16,9 @@ export class CreateOrderDto {
   @IsNumber()
   readonly businessId: number;
 
+  @IsNumber()
+  readonly total: number;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderDto)

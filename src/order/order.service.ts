@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entity/oder.entity';
 import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
@@ -14,7 +18,6 @@ import { OrderedProductService } from 'src/ordered-product/ordered-product.servi
 import { OrderedIngredientService } from 'src/ordered-ingredient/odered-ingredient.service';
 import { CreateOrderedIngredientDto } from 'src/ordered-ingredient/dto/create-ordered-ingredient.dto';
 import { USER_ROLE } from 'src/user/enum/user-role.enum';
-import { BusinessService } from 'src/business/business.service';
 
 @Injectable()
 export class OrderService {
@@ -22,7 +25,6 @@ export class OrderService {
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     private readonly orderDetailService: OrderDetailService,
-    private readonly businessService: BusinessService,
     private readonly productService: ProductService,
     private readonly orderedProductService: OrderedProductService,
     private readonly ingredientsService: IngredientService,
@@ -98,17 +100,14 @@ export class OrderService {
     return order;
   }
 
-  async create(userId: number, { businessId, orders }: CreateOrderDto) {
+  async create(userId: number, { businessId, total, orders }: CreateOrderDto) {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const business = await this.businessService.findOneById(businessId);
       const orderDetailPayload: Array<CreateOrderDetailDto> = [];
-      // set up total with delivery feed cost of the business if does not exist set up with 0
-      let total = business ? business.deliveryFee : 0;
 
       for (const order of orders) {
         const product = await this.productService.findOneById(
@@ -137,7 +136,6 @@ export class OrderService {
         });
 
         if (product) {
-          total = total + product.price * order.quantity;
           orderDetailPayload.push({
             ...order,
             product: orderedProduct,
@@ -169,6 +167,7 @@ export class OrderService {
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      throw new BadRequestException('Error at create a new order', error);
     } finally {
       await queryRunner.release();
     }

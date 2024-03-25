@@ -69,6 +69,7 @@ export class BusinessService {
       end,
       open,
       deliveryFee,
+      estimatedDeliveryTime,
       product,
     }: UpdateBusinessDto,
   ) {
@@ -89,6 +90,8 @@ export class BusinessService {
     if (end) business.end = end;
     if (open !== undefined) business.open = open;
     if (deliveryFee) business.deliveryFee = deliveryFee;
+    if (estimatedDeliveryTime)
+      business.estimatedDeliveryTime = estimatedDeliveryTime;
     if (product) business.product = [...business.product, ...product];
 
     return this.businessRepository.save(business);

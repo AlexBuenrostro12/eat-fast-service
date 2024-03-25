@@ -51,6 +51,9 @@ export class Business {
   @Column({ default: 0 })
   deliveryFee: number;
 
+  @Column({ default: '30 minutos' })
+  estimatedDeliveryTime: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -24,4 +24,7 @@ export class CreateBusinessDto {
 
   @IsNumber()
   readonly deliveryFee: number;
+
+  @IsString()
+  readonly estimatedDeliveryTime: string;
 }

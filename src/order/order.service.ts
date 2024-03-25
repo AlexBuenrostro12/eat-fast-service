@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entity/oder.entity';
 import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
@@ -18,6 +14,7 @@ import { OrderedProductService } from 'src/ordered-product/ordered-product.servi
 import { OrderedIngredientService } from 'src/ordered-ingredient/odered-ingredient.service';
 import { CreateOrderedIngredientDto } from 'src/ordered-ingredient/dto/create-ordered-ingredient.dto';
 import { USER_ROLE } from 'src/user/enum/user-role.enum';
+import { ResponseOrderDto } from './dto/response-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -100,7 +97,10 @@ export class OrderService {
     return order;
   }
 
-  async create(userId: number, { businessId, total, orders }: CreateOrderDto) {
+  async create(
+    userId: number,
+    { businessId, total, orders }: CreateOrderDto,
+  ): Promise<ResponseOrderDto> {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -165,9 +165,11 @@ export class OrderService {
       await queryRunner.manager.save(OrderDetail, linkedOrderDetail);
 
       await queryRunner.commitTransaction();
+
+      return { created: true };
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new BadRequestException('Error at create a new order', error);
+      return { created: false, error };
     } finally {
       await queryRunner.release();
     }

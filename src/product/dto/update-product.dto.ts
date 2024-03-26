@@ -1,6 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Ingredient } from 'src/ingredient/entity/ingredient.entity';
+import { PRODUCT_TYPE } from 'src/user/enum/product.enum';
 
 export class UpdateProductDto {
   @IsOptional()
@@ -18,4 +25,20 @@ export class UpdateProductDto {
   @Type(() => Array<Ingredient>)
   @IsOptional()
   readonly ingredient?: Ingredient[];
+
+  @IsOptional()
+  @IsBoolean()
+  readonly inStock?: boolean;
+
+  @IsEnum(PRODUCT_TYPE)
+  @IsOptional()
+  readonly type?: PRODUCT_TYPE;
+
+  @IsNumber()
+  @IsOptional()
+  readonly minPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly maxPrice?: number;
 }

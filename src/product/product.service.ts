@@ -42,19 +42,26 @@ export class ProductService {
     ingredients,
     ...payload
   }: CreateProductDto) {
+    const business = await this.businessService.findOneById(businessId);
+
+    if (!business) {
+      throw new NotFoundException(`Business with #${businessId} not found`);
+    }
+
     const arrayOfIngredientsPromise: Array<Promise<Ingredient>> = [];
     ingredients.forEach((ingredient) => {
       arrayOfIngredientsPromise.push(this.ingredientService.create(ingredient));
     });
     const newIngredients = await Promise.all(arrayOfIngredientsPromise);
-    const product = this.productRepository.create({ ...payload });
+    const product = this.productRepository.create({
+      ...payload,
+    });
 
     product.ingredient = [...newIngredients];
 
     const newProduct = await this.productRepository.save(product);
 
     if (newProduct) {
-      const business = await this.businessService.findOneById(businessId);
       await this.businessService.update(businessId, {
         product: [...business.product, newProduct],
       });
@@ -66,7 +73,16 @@ export class ProductService {
   async update(
     id: number,
     userId: number,
-    { name, description, price, ingredient }: UpdateProductDto,
+    {
+      name,
+      description,
+      price,
+      ingredient,
+      inStock,
+      type,
+      minPrice,
+      maxPrice,
+    }: UpdateProductDto,
   ) {
     const product = await this.findOneById(id, userId);
 
@@ -77,7 +93,11 @@ export class ProductService {
     if (name) product.name = name;
     if (description) product.description = description;
     if (price) product.price = price;
+    if (inStock !== undefined) product.inStock = inStock;
     if (ingredient) product.ingredient = [...product.ingredient, ...ingredient];
+    if (type) product.type = type;
+    if (minPrice) product.minPrice = minPrice;
+    if (maxPrice) product.maxPrice = minPrice;
 
     return this.productRepository.save(product);
   }

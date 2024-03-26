@@ -1,4 +1,5 @@
 import { Address } from 'src/address/entity/address.entity';
+import { Order } from 'src/order/entity/oder.entity';
 import { Product } from 'src/product/entity/product.entity';
 import { User } from 'src/user/entity/user.entity';
 import {
@@ -25,6 +26,9 @@ export class Business {
   @OneToMany(() => Product, (product) => product.business)
   product: Product[];
 
+  @OneToMany(() => Order, (order) => order.business)
+  order: Order[];
+
   @Column()
   name: string;
 
@@ -43,6 +47,12 @@ export class Business {
 
   @Column()
   open: boolean;
+
+  @Column({ default: 0 })
+  deliveryFee: number;
+
+  @Column({ default: '30 minutos' })
+  estimatedDeliveryTime: string;
 
   @CreateDateColumn()
   createdAt: Date;

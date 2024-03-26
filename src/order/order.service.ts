@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entity/oder.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderDetailService } from 'src/order-detail/order-detail.service';
@@ -13,6 +13,9 @@ import { IngredientService } from 'src/ingredient/ingredient.service';
 import { OrderedProductService } from 'src/ordered-product/ordered-product.service';
 import { OrderedIngredientService } from 'src/ordered-ingredient/odered-ingredient.service';
 import { CreateOrderedIngredientDto } from 'src/ordered-ingredient/dto/create-ordered-ingredient.dto';
+import { USER_ROLE } from 'src/user/enum/user-role.enum';
+import { ResponseOrderDto } from './dto/response-order.dto';
+import { PRODUCT_TYPE } from 'src/user/enum/product.enum';
 
 @Injectable()
 export class OrderService {
@@ -27,13 +30,35 @@ export class OrderService {
     private readonly dataSource: DataSource,
   ) {}
 
-  findAll(userId: number) {
+  findAll(userId: number, role: USER_ROLE) {
+    let condition: FindOptionsWhere<Order> | FindOptionsWhere<Order>[] = {};
+
+    if (role === USER_ROLE.USER) {
+      condition = { user: { id: userId } };
+    }
+
     return this.orderRepository.find({
-      where: { user: { id: userId } },
+      where: condition,
       relations: {
+        business: true,
+        user: {
+          address: true,
+        },
         orderDetail: {
           product: true,
           ingredients: true,
+        },
+      },
+      select: {
+        user: {
+          firstname: true,
+          lastname: true,
+          phone: true,
+          address: {
+            street: true,
+            number: true,
+            cologne: true,
+          },
         },
       },
     });
@@ -43,12 +68,25 @@ export class OrderService {
     const order = await this.orderRepository.findOne({
       where: { id, user: { id: userId } },
       relations: {
+        business: true,
+        user: {
+          address: true,
+        },
         orderDetail: {
           product: true,
           ingredients: true,
         },
+      },
+      select: {
         user: {
-          address: true,
+          firstname: true,
+          lastname: true,
+          phone: true,
+          address: {
+            street: true,
+            number: true,
+            cologne: true,
+          },
         },
       },
     });
@@ -60,7 +98,10 @@ export class OrderService {
     return order;
   }
 
-  async create(userId: number, { orders }: CreateOrderDto) {
+  async create(
+    userId: number,
+    { businessId, total, orders }: CreateOrderDto,
+  ): Promise<ResponseOrderDto> {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -68,7 +109,6 @@ export class OrderService {
 
     try {
       const orderDetailPayload: Array<CreateOrderDetailDto> = [];
-      let total = 0;
 
       for (const order of orders) {
         const product = await this.productService.findOneById(
@@ -90,14 +130,17 @@ export class OrderService {
             orderedIngredientsPayload,
           );
 
+        const price =
+          product.type === PRODUCT_TYPE.ORDER
+            ? order.orderPrice
+            : product.price;
         const orderedProduct = await this.orderedProductService.create({
           name: product.name,
           description: product.description,
-          price: product.price,
+          price,
         });
 
         if (product) {
-          total = total + product.price * order.quantity;
           orderDetailPayload.push({
             ...order,
             product: orderedProduct,
@@ -114,6 +157,7 @@ export class OrderService {
         status: STATUS.PENDING,
         total,
         user: { id: userId },
+        business: { id: businessId },
       });
 
       const orderResponse = await queryRunner.manager.save(Order, order);
@@ -126,8 +170,11 @@ export class OrderService {
       await queryRunner.manager.save(OrderDetail, linkedOrderDetail);
 
       await queryRunner.commitTransaction();
+
+      return { created: true };
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      return { created: false, error };
     } finally {
       await queryRunner.release();
     }

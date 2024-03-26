@@ -61,7 +61,17 @@ export class BusinessService {
 
   async update(
     id: number,
-    { name, phone, address, start, end, open, product }: UpdateBusinessDto,
+    {
+      name,
+      phone,
+      address,
+      start,
+      end,
+      open,
+      deliveryFee,
+      estimatedDeliveryTime,
+      product,
+    }: UpdateBusinessDto,
   ) {
     const business = await this.findOneById(id);
 
@@ -78,7 +88,10 @@ export class BusinessService {
       };
     if (start) business.start = start;
     if (end) business.end = end;
-    if (open) business.open = open;
+    if (open !== undefined) business.open = open;
+    if (deliveryFee) business.deliveryFee = deliveryFee;
+    if (estimatedDeliveryTime)
+      business.estimatedDeliveryTime = estimatedDeliveryTime;
     if (product) business.product = [...business.product, ...product];
 
     return this.businessRepository.save(business);

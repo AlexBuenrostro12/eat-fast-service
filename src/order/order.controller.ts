@@ -1,17 +1,21 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
   Request,
+  Res,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { AuthUserDto } from 'src/auth/dto/auth-user.dto';
+import { Response } from 'express';
 
 @Controller('order')
 export class OrderController {
@@ -19,7 +23,7 @@ export class OrderController {
 
   @Get('all')
   findAll(@Request() req: AuthUserDto) {
-    return this.orderService.findAll(req.user.id);
+    return this.orderService.findAll(req.user.id, req.user.role);
   }
 
   @Get(':id')
@@ -28,8 +32,20 @@ export class OrderController {
   }
 
   @Post()
-  create(@Body() payload: CreateOrderDto, @Request() req: AuthUserDto) {
-    return this.orderService.create(req.user.id, payload);
+  async create(
+    @Body() payload: CreateOrderDto,
+    @Request() req: AuthUserDto,
+    @Res() res: Response,
+  ) {
+    const order = await this.orderService.create(req.user.id, payload);
+    if (!order.created) {
+      throw new BadRequestException(
+        'Error at create a new order',
+        order?.error,
+      );
+    }
+
+    res.send(order).status(HttpStatus.CREATED);
   }
 
   @Patch(':id')

@@ -11,6 +11,7 @@ import {
 import { STATUS } from '../enum/order.enum';
 import { User } from 'src/user/entity/user.entity';
 import { OrderDetail } from 'src/order-detail/entity/oder-detail.entity';
+import { Business } from 'src/business/entity/business.entity';
 
 @Entity()
 export class Order {
@@ -19,6 +20,9 @@ export class Order {
 
   @ManyToOne(() => User, (user) => user.order)
   user: User;
+
+  @ManyToOne(() => Business, (business) => business.order)
+  business: Business;
 
   @OneToMany(() => OrderDetail, (orderDetail) => orderDetail.order)
   orderDetail: OrderDetail[];

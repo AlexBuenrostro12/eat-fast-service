@@ -15,6 +15,7 @@ import { OrderedIngredientService } from 'src/ordered-ingredient/odered-ingredie
 import { CreateOrderedIngredientDto } from 'src/ordered-ingredient/dto/create-ordered-ingredient.dto';
 import { USER_ROLE } from 'src/user/enum/user-role.enum';
 import { ResponseOrderDto } from './dto/response-order.dto';
+import { PRODUCT_TYPE } from 'src/user/enum/product.enum';
 
 @Injectable()
 export class OrderService {
@@ -129,10 +130,14 @@ export class OrderService {
             orderedIngredientsPayload,
           );
 
+        const price =
+          product.type === PRODUCT_TYPE.ORDER
+            ? order.orderPrice
+            : product.price;
         const orderedProduct = await this.orderedProductService.create({
           name: product.name,
           description: product.description,
-          price: product.price,
+          price,
         });
 
         if (product) {

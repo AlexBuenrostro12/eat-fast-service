@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, ValidateNested } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, ValidateNested } from 'class-validator';
 
 export class OrderDto {
   @IsNumber()
@@ -10,6 +10,10 @@ export class OrderDto {
 
   @IsNumber()
   readonly quantity: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly orderPrice?: number;
 }
 
 export class CreateOrderDto {

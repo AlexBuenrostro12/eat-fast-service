@@ -111,10 +111,7 @@ export class OrderService {
       const orderDetailPayload: Array<CreateOrderDetailDto> = [];
 
       for (const order of orders) {
-        const product = await this.productService.findOneById(
-          order.productId,
-          userId,
-        );
+        const product = await this.productService.findOneById(order.productId);
         const ingredients = await this.ingredientsService.findManyById(
           order.ingredientIds,
         );

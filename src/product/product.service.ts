@@ -17,16 +17,15 @@ export class ProductService {
     private readonly businessService: BusinessService,
   ) {}
 
-  findAll(userId: number) {
+  findAll() {
     return this.productRepository.find({
-      where: { business: { user: { id: userId } } },
       relations: ['ingredient'],
     });
   }
 
-  async findOneById(id: number, userId: number) {
+  async findOneById(id: number) {
     const product = await this.productRepository.findOne({
-      where: { id, business: { user: { id: userId } } },
+      where: { id },
       relations: ['ingredient'],
     });
 
@@ -72,7 +71,6 @@ export class ProductService {
 
   async update(
     id: number,
-    userId: number,
     {
       name,
       description,
@@ -84,7 +82,7 @@ export class ProductService {
       maxPrice,
     }: UpdateProductDto,
   ) {
-    const product = await this.findOneById(id, userId);
+    const product = await this.findOneById(id);
 
     if (!product) {
       throw new NotFoundException(`Product with #${id} not found`);
@@ -98,6 +96,16 @@ export class ProductService {
     if (type) product.type = type;
     if (minPrice) product.minPrice = minPrice;
     if (maxPrice) product.maxPrice = minPrice;
+
+    return this.productRepository.save(product);
+  }
+
+  async updateImage(id: number, image?: string) {
+    const product = await this.findOneById(id);
+
+    if (product) {
+      product.image = image || null;
+    }
 
     return this.productRepository.save(product);
   }

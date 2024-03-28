@@ -44,6 +44,9 @@ export class Product {
   @Column({ default: 0 })
   maxPrice: number;
 
+  @Column({ nullable: true, default: null })
+  image?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

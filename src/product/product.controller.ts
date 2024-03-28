@@ -6,25 +6,23 @@ import {
   Param,
   Patch,
   Post,
-  Request,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { AuthUserDto } from 'src/auth/dto/auth-user.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  findAll(@Request() req: AuthUserDto) {
-    return this.productService.findAll(req.user.id);
+  findAll() {
+    return this.productService.findAll();
   }
 
   @Get(':id')
-  findOneById(@Param('id') id: number, @Request() req: AuthUserDto) {
-    return this.productService.findOneById(id, req.user.id);
+  findOneById(@Param('id') id: number) {
+    return this.productService.findOneById(id);
   }
 
   @Post()
@@ -33,12 +31,8 @@ export class ProductController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: number,
-    @Body() payload: UpdateProductDto,
-    @Request() req: AuthUserDto,
-  ) {
-    return this.productService.update(id, req.user.id, payload);
+  update(@Param('id') id: number, @Body() payload: UpdateProductDto) {
+    return this.productService.update(id, payload);
   }
 
   @Delete(':id')

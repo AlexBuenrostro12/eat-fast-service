@@ -36,6 +36,7 @@ export class UserService {
         'role',
         'refreshToken',
         'forgotPasswordToken',
+        'image',
       ],
     });
   }
@@ -61,6 +62,7 @@ export class UserService {
           number: true,
           cologne: true,
         },
+        image: true,
         ...selectKey,
       },
     });
@@ -133,6 +135,16 @@ export class UserService {
       }
       if (refreshToken) user.refreshToken = refreshToken;
       if (forgotPasswordToken) user.forgotPasswordToken = forgotPasswordToken;
+    }
+
+    return this.userRepository.save(user);
+  }
+
+  async updateImage(id: number, image?: string) {
+    const user = await this.findOneById(id);
+
+    if (user) {
+      user.image = image || null;
     }
 
     return this.userRepository.save(user);

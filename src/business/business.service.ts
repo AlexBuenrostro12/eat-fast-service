@@ -97,6 +97,16 @@ export class BusinessService {
     return this.businessRepository.save(business);
   }
 
+  async updateImage(id: number, image?: string) {
+    const business = await this.findOneById(id);
+
+    if (business) {
+      business.image = image || null;
+    }
+
+    return this.businessRepository.save(business);
+  }
+
   async delete(id: number) {
     return await this.businessRepository.softDelete(id);
   }

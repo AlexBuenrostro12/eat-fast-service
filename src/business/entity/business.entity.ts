@@ -54,6 +54,9 @@ export class Business {
   @Column({ default: '30 minutos' })
   estimatedDeliveryTime: string;
 
+  @Column({ nullable: true, default: null })
+  image?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -44,6 +44,9 @@ import { AuthService } from './auth/auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { ConfigModule } from '@nestjs/config';
+import { UploadModule } from './upload/upload.module';
+import { UploadController } from './upload/upload.controller';
+import { UploadService } from './upload/upload.service';
 
 @Module({
   imports: [
@@ -60,6 +63,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DB_DATA_BASE, // name of our database,
       autoLoadEntities: true, // models will be loaded automatically
       synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
+      // comment this in local
       ssl: {
         rejectUnauthorized: false,
       },
@@ -85,6 +89,7 @@ import { ConfigModule } from '@nestjs/config';
     OrderedProductModule,
     OrderedIngredientModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [
     AppController,
@@ -98,6 +103,7 @@ import { ConfigModule } from '@nestjs/config';
     OrderedProductController,
     OrderedIngredientController,
     AuthController,
+    UploadController,
   ],
   providers: [
     AppService,
@@ -111,6 +117,7 @@ import { ConfigModule } from '@nestjs/config';
     OrderedProductService,
     OrderedIngredientService,
     AuthService,
+    UploadService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { UploadTypeEntity } from '../enum/upload.enum';
+import { UploadTypeEntity } from '../enum/file.enum';
 import { Transform } from 'class-transformer';
 
 export class UploadFileDto {

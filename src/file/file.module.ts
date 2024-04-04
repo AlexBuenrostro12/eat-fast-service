@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UploadController } from './upload.controller';
-import { UploadService } from './upload.service';
+import { FileController } from './file.controller';
+import { FileService } from './file.service';
 import { UserService } from 'src/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
@@ -17,9 +17,9 @@ import { IngredientService } from 'src/ingredient/ingredient.service';
   imports: [
     TypeOrmModule.forFeature([User, Address, Business, Product, Ingredient]),
   ],
-  controllers: [UploadController],
+  controllers: [FileController],
   providers: [
-    UploadService,
+    FileService,
     UserService,
     AddressService,
     BusinessService,
@@ -27,4 +27,4 @@ import { IngredientService } from 'src/ingredient/ingredient.service';
     IngredientService,
   ],
 })
-export class UploadModule {}
+export class FileModule {}

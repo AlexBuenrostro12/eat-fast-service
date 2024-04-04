@@ -44,9 +44,9 @@ import { AuthService } from './auth/auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { ConfigModule } from '@nestjs/config';
-import { UploadModule } from './upload/upload.module';
-import { UploadController } from './upload/upload.controller';
-import { UploadService } from './upload/upload.service';
+import { FileModule } from './file/file.module';
+import { FileController } from './file/file.controller';
+import { FileService } from './file/file.service';
 
 @Module({
   imports: [
@@ -89,7 +89,7 @@ import { UploadService } from './upload/upload.service';
     OrderedProductModule,
     OrderedIngredientModule,
     AuthModule,
-    UploadModule,
+    FileModule,
   ],
   controllers: [
     AppController,
@@ -103,7 +103,7 @@ import { UploadService } from './upload/upload.service';
     OrderedProductController,
     OrderedIngredientController,
     AuthController,
-    UploadController,
+    FileController,
   ],
   providers: [
     AppService,
@@ -117,7 +117,7 @@ import { UploadService } from './upload/upload.service';
     OrderedProductService,
     OrderedIngredientService,
     AuthService,
-    UploadService,
+    FileService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

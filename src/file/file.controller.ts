@@ -16,16 +16,16 @@ import {
   Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadService } from './upload.service';
+import { FileService } from './file.service';
 import { Response } from 'express';
-import { DeleteFileDto, UploadFileDto } from './dto/upload.dto';
+import { DeleteFileDto, UploadFileDto } from './dto/file.dto';
 
-@Controller('upload')
-export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+@Controller('file')
+export class FileController {
+  constructor(private readonly fileService: FileService) {}
   @Get()
   async getUserImage(@Query('image') image: string, @Res() res: Response) {
-    const signedUrl = await this.uploadService.getUserImage(image);
+    const signedUrl = await this.fileService.getUserImage(image);
 
     if (!signedUrl) throw new NotFoundException('User image does not exist');
 
@@ -47,7 +47,7 @@ export class UploadController {
     @Body() payload: UploadFileDto,
     @Res() res: Response,
   ) {
-    const image = await this.uploadService.upload(
+    const image = await this.fileService.upload(
       payload.id,
       payload.uploadType,
       file.originalname,
@@ -60,8 +60,8 @@ export class UploadController {
   }
 
   @Delete()
-  async deleteUserImage(@Query() params: DeleteFileDto, @Res() res: Response) {
-    const deleted = await this.uploadService.deleteImage(params);
+  async deleteImage(@Query() params: DeleteFileDto, @Res() res: Response) {
+    const deleted = await this.fileService.deleteImage(params);
 
     if (!deleted) throw new NotFoundException('User image does not exist');
 

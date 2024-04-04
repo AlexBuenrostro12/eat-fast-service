@@ -9,16 +9,17 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
 import { v4 as uuidv4 } from 'uuid';
-import { UploadTypeEntity } from './enum/upload.enum';
-import { DeleteFileDto } from './dto/upload.dto';
+import { UploadTypeEntity } from './enum/file.enum';
+import { DeleteFileDto } from './dto/file.dto';
 import { BusinessService } from 'src/business/business.service';
 import { ProductService } from 'src/product/product.service';
 
 @Injectable()
-export class UploadService {
+export class FileService {
   private readonly s3: S3Client;
   private readonly s3Bucket: string;
   private readonly expiresIn: string;
+  private readonly appEnv: string;
 
   constructor(
     private readonly configService: ConfigService<
@@ -28,6 +29,7 @@ export class UploadService {
         AWS_ACCESS_KEY_ID: string;
         AWS_SECRET_ACCESS_KEY: string;
         AWS_S3_IMAGE_EXPIRES_IN: string;
+        APP_ENV: string;
       },
       true
     >,
@@ -44,6 +46,7 @@ export class UploadService {
     });
     this.s3Bucket = this.configService.get('AWS_S3_BUCKET');
     this.expiresIn = this.configService.get('AWS_S3_IMAGE_EXPIRES_IN');
+    this.appEnv = this.configService.get('APP_ENV');
   }
 
   async upload(
@@ -52,7 +55,7 @@ export class UploadService {
     fileName: string,
     file: Buffer,
   ): Promise<string | null> {
-    const Key = `${uploadType}-${id}/${uuidv4()}-${fileName}`;
+    const Key = `${this.appEnv}/${uploadType}-${id}/${uuidv4()}-${fileName}`;
     const uploaed = await this.s3.send(
       new PutObjectCommand({
         Bucket: this.s3Bucket,
